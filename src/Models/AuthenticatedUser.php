@@ -1,0 +1,57 @@
+<?php
+namespace Hyperbolus\Dynamite\Models;
+
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use Hyperbolus\Dynamite\Dynamite;
+
+class AuthenticatedUser extends User
+{
+    public bool $authenticated = false;
+
+    public string $name;
+    public ?string $password;
+
+    /*
+     * Account ID is a registration ID when you sign up with an email and password
+     */
+    public string $account_id;
+
+    /**
+     * Everyone has a player ID
+     */
+    public string $player_id;
+
+    public int $stars;
+    public int $demons;
+
+    /**
+     * User has no ranking if leaderboard banned
+     */
+    public ?int $ranking;
+
+    public function __construct(string $username, ?string $password)
+    {
+
+    }
+
+    public function messages(int $page): array {
+        gj_request('getGJMessages20', [
+            'page' => 0,
+            'total' => 0,
+            'secret' => 'Wmfd2893gb7',
+            'accountID' => $this->account_id,
+            'gjp' => gjp($this->password),
+        ]);
+    }
+
+    public function messagesSent(int $page): array {
+        gj_request('getGJMessages20', [
+            'page' => 0,
+            'total' => 0,
+            'secret' => 'Wmfd2893gb7',
+            'accountID' => $this->account_id,
+            'gjp' => gjp($this->password),
+        ]);
+    }
+}
