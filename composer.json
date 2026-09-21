@@ -1,5 +1,5 @@
 {
-  "name": "hyperbolus/dynamite",
+  "name": "hype/dynamite",
   "description": "Wrapper for Geometry Dash's Boomlings API",
   "type": "library",
   "license": "MIT",
