@@ -165,31 +165,3 @@ if (!function_exists('base64_urldecode')) {
         return base64_decode(strtr($string, '-_', '+/'), true);
     }
 }
-
-if (!function_exists('print_class_table')) {
-    /**
-     * @param object|array<object> $items
-     */
-    function print_class_table(object|array $items): void
-    {
-        if (!is_array($items)) $items = [$items];
-
-        if (empty($items)) return;
-
-        echo '<table border="1">';
-
-        echo '<thead><tr>';
-        foreach (get_class_vars(get_class($items[0])) as $key => $_) echo '<th>' . $key . '</th>';
-        echo '</tr></thead>';
-
-        foreach ($items as $item) {
-            echo '<tr>';
-            foreach ($item as $value) {
-                echo '<td>' . $value . '</td>';
-            }
-            echo '</tr>';
-        }
-
-        echo '</table>';
-    }
-}
