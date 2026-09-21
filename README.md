@@ -8,7 +8,7 @@
 
 # Installation
 ```shell
-composer require hyperbolus/dynamite
+composer require hype/dynamite
 ```
 
 # Usage
@@ -18,7 +18,7 @@ You should have experience using composer and how projects and dependencies work
 View the [examples/](examples/README.md) directory
 
 # Coverage
-Not great. v1 milestone's goal is to cover 100% functionality. Developed for the Hype CMS, so those requirements are priority
+Not great. v1 milestone's goal is to cover 100% functionality. Developed for Hyperbolus, so those requirements are priority
 
 # License
 Dynamite is released under the MIT License

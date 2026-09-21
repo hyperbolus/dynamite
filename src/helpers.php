@@ -11,12 +11,14 @@ const GJ_XOR_CHK_COMMENT = 29481;
 const GJ_XOR_GJP = 37526;
 const GJ_XOR_DAILY_CHESTS = 59182;
 
+const GJ_SALT_LEVELS = 'xI25fpAapCQg';
+
 const GJ_ENDPOINTS = [
     "deleteGJLevelUser20",
     "rateGJDemon21",
     "suggestGJStars20",
     "registerGJAccount",
-    "loginGJAccount",
+    "accounts/loginGJAccount",
     "syncGJAccountNew",
     "backupGJAccountNew",
     "updateGJAccSettings20",
@@ -91,15 +93,7 @@ if (!function_exists('gj_map')) {
 if (!function_exists('xor_key')) {
     function xor_key(string $str, string $key): string
     {
-        $out = '';
-
-        for ($i = 0; $i < strlen($str);) {
-            for ($j = 0; ($j < strlen($key) && $i < strlen($str)); $j++, $i++) {
-                $out .= $str[$i] ^ $key[$j];
-            }
-        }
-
-        return $out;
+        return \Hyperbolus\Dynamite\Transform::xor($str, $key);
     }
 }
 
@@ -125,6 +119,38 @@ if (!function_exists('gjp')) {
     }
 }
 
+if (!function_exists('gjp2')) {
+    function gjp2(string $password = '', string $salt = 'mI29fmAnxgTs'): string
+    {
+        return sha1($password . $salt);
+    }
+}
+
+if (!function_exists('gj_udid')) {
+    function gj_udid(): string
+    {
+        // TODO: add other platform types
+
+        $min = 100_000;
+        $max = 100_000_000;
+
+        return 'S15' . rand($min, $max) . rand($min, $max) . rand($min, $max) . rand($min, $max);
+    }
+}
+
+if (!function_exists('dd')) {
+    function dd($data): string
+    {
+        if (function_exists('dump')) {
+            dump($data);
+        } else {
+            echo '<pre>';
+            var_dump($data);
+        }
+
+        die();
+    }
+}
 
 if (!function_exists('base64_urlencode')) {
     function base64_urlencode($string): string
@@ -137,5 +163,33 @@ if (!function_exists('base64_urldecode')) {
     function base64_urldecode($string): bool|string
     {
         return base64_decode(strtr($string, '-_', '+/'), true);
+    }
+}
+
+if (!function_exists('print_class_table')) {
+    /**
+     * @param object|array<object> $items
+     */
+    function print_class_table(object|array $items): void
+    {
+        if (!is_array($items)) $items = [$items];
+
+        if (empty($items)) return;
+
+        echo '<table border="1">';
+
+        echo '<thead><tr>';
+        foreach (get_class_vars(get_class($items[0])) as $key => $_) echo '<th>' . $key . '</th>';
+        echo '</tr></thead>';
+
+        foreach ($items as $item) {
+            echo '<tr>';
+            foreach ($item as $value) {
+                echo '<td>' . $value . '</td>';
+            }
+            echo '</tr>';
+        }
+
+        echo '</table>';
     }
 }
