@@ -13,7 +13,8 @@
     }
   },
   "require": {
-    "guzzlehttp/guzzle": "^7.8"
+    "guzzlehttp/guzzle": "^7.8",
+    "ext-mbstring": "*"
   },
   "require-dev": {
     "symfony/var-dumper": "^8.1",
