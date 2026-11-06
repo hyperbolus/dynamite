@@ -3,7 +3,8 @@
 namespace Hyperbolus\Dynamite;
 
 use ArrayAccess;
-use Hyperbolus\Dynamite\Models\Message;
+use Hyperbolus\Dynamite\Models\Comment;
+use Hyperbolus\Dynamite\Traits\GJSerializable;
 use IteratorAggregate;
 
 /**
@@ -44,14 +45,28 @@ class Paginator implements ArrayAccess, IteratorAggregate
      * @param class-string<U> $class
      * @return Paginator<U>
      */
-    public static function parse(string $content, string $class): Paginator {
+    public static function parse(string $content, string $class, string $separator = ':'): Paginator {
+        if (!in_array(GJSerializable::class, class_uses($class))) {
+            throw new \Error('Class has no (de)serializer');
+        }
+
         [$content, $pagination] = mb_split('#', $content);
 
-        $messages = [];
+        $items = [];
 
-        foreach (explode('|', $content) as $msg) $messages[] = Message::deserialize(gj_map($msg, ':'));
+        foreach (explode('|', $content) as $item) {
+            $addition = null;
 
-        return new Paginator($class, $messages, ...mb_split(':', $pagination));
+            if ($class === Comment::class) [$item, $addition] = explode(':', $item);
+
+            $out = $class::deserialize(gj_map($item, $separator));
+
+            if ($class === Comment::class) $out->player = gj_map($addition, $separator);
+
+            $items[] = $out;
+        }
+
+        return new Paginator($class, $items, ...mb_split(':', $pagination));
     }
 
     /**

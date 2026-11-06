@@ -45,7 +45,7 @@ class Level
     #[Serializable(14)]
     public ?int $likes = null;
 
-    #[Serializable(14)]
+    #[Serializable(15)]
     public int $length;
 
     #[Serializable(16)]
@@ -68,6 +68,9 @@ class Level
 
     #[Serializable(30)]
     public int $copied_id;
+
+    #[Serializable(35)]
+    public ?int $customSongID = null;
 
     #[Serializable(36)]
     public ?string $extraString = null;
@@ -101,6 +104,12 @@ class Level
 
     // 48 - setting strings
     // 54 - unknown, k106 in save file
+
+    #[Serializable(62)]
+    public int $uploaded_at;
+
+    #[Serializable(63)]
+    public int $updated_at;
 
     public function __construct()
     {
@@ -139,13 +148,16 @@ class Level
             ];
         }
 
-        foreach (explode('~:~', $bits[2]) as $song) $songs[] = gj_map($song, '~|~');
+        foreach (explode('~:~', $bits[2]) as $song) {
+            $song = gj_map($song, '~|~');
+            $songs[$song[1]] = $song;
+        }
 
         foreach (explode('|', $bits[0]) as $level) {
             $obj = Level::deserialize(gj_map($level, ':'));
 
             $obj->uploader = $users[$obj->player_id];
-//            $obj->song = null;
+            $obj->song = $songs[$obj->customSongID] ?? null;
 
             $levels[] = $obj;
         }
