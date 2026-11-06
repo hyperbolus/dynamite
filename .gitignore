@@ -1,2 +1,5 @@
 .idea/
 vendor/
+
+# test files
+examples/_*
