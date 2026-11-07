@@ -154,10 +154,14 @@ class Level
                 'account_id' => $user[2],
             ];
         }
+        
+        $song_bits = explode('~:~', $bits[2]);
 
-        foreach (explode('~:~', $bits[2]) as $song) {
-            $song = gj_map($song, '~|~');
-            $songs[$song[1]] = $song;
+        if ($song_bits[0] !== '') {
+            foreach ($song_bits as $song) {
+                $song = gj_map($song, '~|~');
+                $songs[$song[1]] = $song;
+            }
         }
 
         foreach (explode('|', $bits[0]) as $level) {
