@@ -98,6 +98,9 @@ if (!function_exists('xor_key')) {
 }
 
 if (!function_exists('gj_request')) {
+    /**
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     function gj_request(string $url, array $parameters): string
     {
         if (!in_array($url, GJ_ENDPOINTS)) throw new Error('Unknown Endpoint');
@@ -108,7 +111,14 @@ if (!function_exists('gj_request')) {
             ],
             'form_params' => $parameters
         ]);
-        return (string)$client->post(\Hyperbolus\Dynamite\Dynamite::$endpoint . $url . '.php')->getBody();
+
+        $res = $client->post(\Hyperbolus\Dynamite\Dynamite::$endpoint . $url . '.php');
+
+        if ($res->getStatusCode() !== 200) {
+            throw new Error('Request failed');
+        }
+
+        return (string)$res->getBody();
     }
 }
 

@@ -1,6 +1,8 @@
 <?php
 namespace Hyperbolus\Dynamite\Models;
 
+use Error;
+use GuzzleHttp\Exception\GuzzleException;
 use Hyperbolus\Dynamite\Attributes\Serializable;
 use Hyperbolus\Dynamite\Traits\GJSerializable;
 use Hyperbolus\Dynamite\Transform;
@@ -123,6 +125,7 @@ class Level
     /**
      * @param array $levels
      * @return Level[]
+     * @throws GuzzleException
      */
     public static function batch(array $levels): array
     {
@@ -133,6 +136,10 @@ class Level
         ]);
 
         $bits = explode('#', $res);
+
+        if ($res === '-1' || count($bits) < 3) {
+            throw new Error('Invalid level fetch response');
+        }
 
         $levels = [];
         $users = [];
